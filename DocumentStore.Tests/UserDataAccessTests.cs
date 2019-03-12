@@ -1,5 +1,6 @@
 namespace DocumentStore.Tests
 {
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using DeepEqual.Syntax;
     using Xunit;
@@ -10,24 +11,32 @@ namespace DocumentStore.Tests
 
         public UserDataAccessTests()
         {
-            this.userDataAccess = new UserDataAccess(DocumentStoreFactory.CreateDocumentStore(new ConnectionStrings())));
+            this.userDataAccess = new UserDataAccess(DocumentStoreFactory.CreateDocumentStore(new ConnectionStrings()));
         }
 
-        public static User CreateUser(string firstName, string lastName, string country)
+        public static User CreateUser(string firstName, string lastName, Gender gender, string country)
         {
             return new User
             {
                 FirstName = firstName,
                 LastName  = lastName,
+                Gender    = gender,
                 Address   = new Address {Country = country}
             };
+        }
+
+        public async Task<User> CreateAndInsertUser(string firstName, string lastName, Gender gender, string country)
+        {
+            var user = CreateUser(firstName, lastName, gender, country);
+            await this.userDataAccess.Insert(user);
+            return user;
         }
 
         [Fact]
         public async Task Should_C_R_U_D()
         {
-            var user1 = CreateUser("Jason", "Statham", "England");
-            var user2 = CreateUser("Zinedine", "Zidane", "France");
+            var user1 = CreateUser("Jason",    "Statham", Gender.Male, "England");
+            var user2 = CreateUser("Zinedine", "Zidane",  Gender.Male, "France");
 
             // Create
             await this.AssertInsert(user1);
@@ -50,9 +59,9 @@ namespace DocumentStore.Tests
         [Fact]
         public async Task Should_Get_and_Delete_by_lastName()
         {
-            var user1 = CreateUser("Jason",    "Statham", "England");
-            var user2 = CreateUser("Zinedine", "Zidane",  "France");
-            var user3 = CreateUser("Enzo", "Zidane",  "France");
+            var user1 = CreateUser("Jason",    "Statham", Gender.Male, "England");
+            var user2 = CreateUser("Zinedine", "Zidane",  Gender.Male, "France");
+            var user3 = CreateUser("Enzo",     "Zidane",  Gender.Male, "France");
 
             // Create
             await this.AssertSave(user1);

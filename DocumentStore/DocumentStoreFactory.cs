@@ -15,7 +15,7 @@
 
                     options.DatabaseSchemaName = "docs";
 
-                    //options.EnumStorage = EnumStorage.AsString;
+                    options.UseDefaultSerialization(EnumStorage.AsString);
 
                     options.Schema
                            .For<Issue>()
