@@ -112,7 +112,7 @@ namespace DocumentStore.Tests
             await this.AssertGet(user.Id, user);
         }
 
-        private async Task AssertDelete(User user)
+        public async Task AssertDelete(User user)
         {
             this.userDataAccess.Delete(user);
             await this.AssertGet(user.Id, null);

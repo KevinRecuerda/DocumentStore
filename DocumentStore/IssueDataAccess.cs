@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Marten;
+    using Marten.Linq.MatchesSql;
+    using Marten.Services.Includes;
 
     public class IssueDataAccess
     {
@@ -28,9 +30,32 @@
             using (var session = this.store.OpenSession())
             {
                 var issues = await session.Query<Issue>()
-                                          .Where(x => x.Tags.Any(tags.Contains))
+                                           // ReSharper disable once ConvertClosureToMethodGroup
+                                           // Lambda is required
+                                          .Where(x => x.Tags.Any(tag => tags.Contains(tag)))
                                           .ToListAsync();
                 return issues;
+            }
+        }
+
+        public async Task<(IReadOnlyList<Issue>, Dictionary<long, User>)> GetByTagsIncludingAssignee(params string[] tags)
+        {
+            using (var session = this.store.OpenSession())
+            {
+                var users = new Dictionary<long, User>();
+
+                var issues = await session.Query<Issue>()
+                                          .Include(i => i.AssigneeId, users, JoinType.LeftOuter)
+                                          // Below does not work
+                                          // TODO : Create Issue
+                                          // ReSharper disable once ConvertClosureToMethodGroup
+                                          // Lambda is required
+                                          .Where(x => x.Tags.Any(tag => tags.Contains(tag)))
+
+                                          .Where(x => x.MatchesSql(new CollectionWhereFragment("d.data->'Tags' ?| ??", new object[] {tags})))
+                                          .ToListAsync();
+
+                return (issues, users);
             }
         }
 
@@ -40,6 +65,19 @@
             {
                 var issue = await session.LoadAsync<Issue>(id);
                 return issue;
+            }
+        }
+
+        public async Task<(Issue, User)> GetByIdIncludingAssignee(long id)
+        {
+            using (var session = this.store.OpenSession())
+            {
+                User assignee = null;
+                var issue = await session.Query<Issue>()
+                                         .Include<User>(i => i.AssigneeId, u => assignee = u, JoinType.LeftOuter)
+                                         .Where(i => i.Id == id)
+                                         .SingleOrDefaultAsync();
+                return (issue, assignee);
             }
         }
 
