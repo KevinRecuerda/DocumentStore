@@ -21,6 +21,15 @@
                            .For<Issue>()
                            .ForeignKey<User>(issue => issue.AssigneeId)
                            .ForeignKey<User>(issue => issue.ReporterId);
+
+                    options.Schema
+                           .For<Smurf>()
+                           .AddSubClassHierarchy(
+                                typeof(SmurfLeader),
+                                typeof(PapaSmurf),
+                                typeof(Smurfette),
+                                typeof(HeftySmurf),
+                                typeof(BrainySmurf));
                 });
         }
     }

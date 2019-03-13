@@ -30,6 +30,7 @@
             using (var session = this.store.OpenSession())
             {
                 var issues = await session.Query<Issue>()
+
                                            // ReSharper disable once ConvertClosureToMethodGroup
                                            // Lambda is required
                                           .Where(x => x.Tags.Any(tag => tags.Contains(tag)))
@@ -45,14 +46,16 @@
                 var users = new Dictionary<long, User>();
 
                 var issues = await session.Query<Issue>()
-                                          .Include(i => i.AssigneeId, users, JoinType.LeftOuter)
-                                          // Below does not work
-                                          // TODO : Create Issue
-                                          // ReSharper disable once ConvertClosureToMethodGroup
-                                          // Lambda is required
-                                          .Where(x => x.Tags.Any(tag => tags.Contains(tag)))
 
-                                          .Where(x => x.MatchesSql(new CollectionWhereFragment("d.data->'Tags' ?| ??", new object[] {tags})))
+                                           // LeftOuter does not work: https://github.com/JasperFx/marten/issues/1222
+                                          .Include(i => i.AssigneeId, users, JoinType.LeftOuter)
+
+                                           // ReSharper disable once ConvertClosureToMethodGroup
+                                           // Lambda is required
+                                           //.Where(x => x.Tags.Any(tag => tags.Contains(tag))) // does not work: https://github.com/JasperFx/marten/issues/1220
+                                          .Where(
+                                               x => x.MatchesSql(
+                                                   new CollectionWhereFragment("d.data->'Tags' ?| ??", new object[] {tags}))) // workaround
                                           .ToListAsync();
 
                 return (issues, users);
@@ -108,7 +111,7 @@
         public List<string> Tags { get; set; }
 
         public long? AssigneeId { get; set; }
-        public long? ReporterId   { get; set; }
+        public long? ReporterId { get; set; }
 
         public override string ToString()
         {

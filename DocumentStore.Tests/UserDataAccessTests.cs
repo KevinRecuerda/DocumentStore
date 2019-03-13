@@ -1,6 +1,5 @@
 namespace DocumentStore.Tests
 {
-    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using DeepEqual.Syntax;
     using Xunit;
