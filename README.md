@@ -1,5 +1,16 @@
-# DocumentStore
+# Document Store
 
 This project is a sample for document store database, using:
 - Postgresql
 - [Marten](https://github.com/JasperFx/marten)
+
+
+#### Docs
+- [Docs](http://jasperfx.github.io/marten/documentation/)
+- [Query](http://jasperfx.github.io/marten/documentation/documents/querying/linq/)
+- [Include](http://jasperfx.github.io/marten/documentation/documents/querying/include/)
+- [Inheritance](http://jasperfx.github.io/marten/documentation/documents/advanced/hierarchies/)
+
+#### Index
+- [Types](https://www.citusdata.com/blog/2017/10/17/tour-of-postgres-index-types/)
+- [Usage](https://medium.com/@Alibaba_Cloud/principles-and-optimization-of-5-postgresql-indexes-btree-hash-gin-gist-and-brin-4d133e7f1842)
