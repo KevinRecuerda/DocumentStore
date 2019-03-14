@@ -17,12 +17,12 @@ namespace DocumentStore.Tests
         [Fact]
         public async Task Should_C_R_U_D()
         {
-            var smurf1 = new Smurf() {Ability = "smurf"};
-            var smurf2 = new SmurfLeader() {Ability = "Lead"};
-            var smurf3 = new PapaSmurf() {Ability = "Papa", Rank = 1, Age = 100};
-            var smurf4 = new Smurfette() {Ability = "Amuse", Suitors = 50};
-            var smurf5 = new HeftySmurf() {Ability = "Protect", Rank = 2, Weight = 300};
-            var smurf6 = new BrainySmurf() {Ability = "Invent", QI = 125};
+            var smurf1 = new Smurf       {Ability = "smurf"};
+            var smurf2 = new SmurfLeader {Ability = "Lead"};
+            var smurf3 = new PapaSmurf   {Ability = "Papa",    Rank = 1, Age = 100};
+            var smurf4 = new Smurfette   {Ability = "Amuse",   Suitors = 50};
+            var smurf5 = new HeftySmurf  {Ability = "Protect", Rank = 2, Weight = 300};
+            var smurf6 = new BrainySmurf {Ability = "Invent",  QI = 125};
 
             // Create
             await this.AssertSave(smurf1);
@@ -34,6 +34,8 @@ namespace DocumentStore.Tests
 
             // Read
             await this.AssertGetAll(smurf1, smurf2, smurf3, smurf4, smurf5, smurf6);
+            await this.AssertGetLeaders(null, smurf2, smurf3, smurf5);
+            await this.AssertGetLeaders(1, smurf2, smurf3);
 
             // Update
             smurf1.Ability = "none";
@@ -60,13 +62,19 @@ namespace DocumentStore.Tests
             actual.ShouldDeepEqual(expected);
         }
 
+        private async Task AssertGetLeaders(int? maxRank, params Smurf[] expected)
+        {
+            var actual = await this.smurfDataAccess.GetLeaders(maxRank);
+            actual.ShouldDeepEqual(expected);
+        }
+
         private async Task AssertSave(Smurf smurf)
         {
             await this.smurfDataAccess.Save(smurf);
             await this.AssertGet(smurf.Id, smurf);
         }
 
-        public async Task AssertDelete(Smurf smurf)
+        private async Task AssertDelete(Smurf smurf)
         {
             this.smurfDataAccess.Delete(smurf);
             await this.AssertGet(smurf.Id, null);

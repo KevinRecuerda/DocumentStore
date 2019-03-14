@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Marten;
 
@@ -19,6 +20,19 @@
             using (var session = this.store.OpenSession())
             {
                 var smurfs = await session.Query<Smurf>().ToListAsync();
+                return smurfs;
+            }
+        }
+
+        public async Task<IReadOnlyList<SmurfLeader>> GetLeaders(int? maxRank)
+        {
+            using (var session = this.store.OpenSession())
+            {
+                IQueryable<SmurfLeader> query = session.Query<SmurfLeader>();
+                if (maxRank.HasValue)
+                    query = query.Where(x => x.Rank <= maxRank);
+
+                var smurfs = await query.ToListAsync();
                 return smurfs;
             }
         }
