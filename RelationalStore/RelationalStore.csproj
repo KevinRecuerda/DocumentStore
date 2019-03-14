@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper.FastCrud" Version="2.5.0.39" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Npgsql">
+      <HintPath>C:\Users\krecuerd042715\.nuget\packages\npgsql\4.0.3\lib\netstandard2.0\Npgsql.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

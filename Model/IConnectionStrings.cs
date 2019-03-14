@@ -1,4 +1,4 @@
-﻿namespace DocumentStore
+﻿namespace Model
 {
     public interface IConnectionStrings
     {

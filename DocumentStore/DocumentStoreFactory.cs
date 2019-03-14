@@ -1,6 +1,7 @@
 ﻿namespace DocumentStore
 {
     using Marten;
+    using Model;
 
     public static class DocumentStoreFactory
     {

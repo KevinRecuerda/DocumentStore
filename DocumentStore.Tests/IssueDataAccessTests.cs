@@ -3,6 +3,8 @@ namespace DocumentStore.Tests
     using System.Linq;
     using System.Threading.Tasks;
     using DeepEqual.Syntax;
+    using Model;
+    using Model.Tests;
     using Xunit;
 
     public class IssueDataAccessTests

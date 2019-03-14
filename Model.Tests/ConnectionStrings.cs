@@ -1,8 +1,8 @@
-﻿namespace DocumentStore.Tests
+﻿namespace Model.Tests
 {
     public class ConnectionStrings : IConnectionStrings
     {
         //public string ConnectionString => ConfigurationManager.ConnectionStrings["TODO"].ConnectionString;
-        public string ConnectionString => "TODO;";
+        public string ConnectionString => "TODO";
     }
 }

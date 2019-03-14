@@ -6,6 +6,7 @@
     using Marten;
     using Marten.Linq.MatchesSql;
     using Marten.Services.Includes;
+    using Model;
 
     public class IssueDataAccess
     {
@@ -100,22 +101,6 @@
                 session.Delete(issue);
                 session.SaveChanges();
             }
-        }
-    }
-
-    public class Issue
-    {
-        public long   Id   { get; set; }
-        public string Name { get; set; }
-
-        public List<string> Tags { get; set; }
-
-        public long? AssigneeId { get; set; }
-        public long? ReporterId { get; set; }
-
-        public override string ToString()
-        {
-            return this.Name;
         }
     }
 }

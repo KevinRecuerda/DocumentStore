@@ -3,6 +3,8 @@ namespace DocumentStore.Tests
     using System;
     using System.Threading.Tasks;
     using DeepEqual.Syntax;
+    using Model;
+    using Model.Tests;
     using Xunit;
 
     public class SmurfDataAccessTests
