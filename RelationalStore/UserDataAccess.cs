@@ -1,6 +1,8 @@
 ﻿namespace RelationalStore
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data;
     using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
@@ -12,11 +14,22 @@
         private const string SelectQuery = @"
 SELECT *
 FROM rel.users u
-JOIN rel.address a
+JOIN rel.addresses a
     on u.address_id = a.id
 ";
 
-        public UserDataAccess(IConnectionStrings connectionStrings) : base(connectionStrings) { }
+        public UserDataAccess(IConnectionStrings connectionStrings) : base(connectionStrings)
+        {
+            OrmConfiguration.GetDefaultEntityMapping<AddressDto>()
+                            .SetSchemaName("rel")
+                            .SetTableName("addresses")
+                            .SetProperty(address => address.Id, prop => prop.SetPrimaryKey().SetDatabaseGenerated(DatabaseGeneratedOption.Identity));
+
+            OrmConfiguration.GetDefaultEntityMapping<UserDto>()
+                            .SetSchemaName("rel")
+                            .SetTableName("users")
+                            .SetProperty(user => user.Id, prop => prop.SetPrimaryKey().SetDatabaseGenerated(DatabaseGeneratedOption.Identity));
+        }
 
         public async Task<IEnumerable<User>> GetAll()
         {
@@ -37,13 +50,17 @@ JOIN rel.address a
         {
             using (var db = this.Open())
             {
+                var query = $@"
+{SelectQuery}
+WHERE u.id = :id";
                 var users = await db.QueryAsync<User, Address, User>(
-                                SelectQuery,
+                                query,
                                 (user, address) =>
                                 {
                                     user.Address = address;
                                     return user;
-                                });
+                                },
+                                new {id});
                 return users.FirstOrDefault();
             }
         }
@@ -57,6 +74,7 @@ JOIN rel.address a
 
                 var userDto = user.ToDto(addressDto.Id);
                 await db.InsertAsync(userDto);
+                user.Id = userDto.Id;
             }
         }
 
@@ -64,16 +82,13 @@ JOIN rel.address a
         {
             using (var db = this.Open())
             {
-                var dto = (await db.FindAsync<UserDto>(
-                               statementOptions => statementOptions.Where($"id = :id")
-                                                                   .WithParameters(new {id = user.Id})))
-                   .FirstOrDefault();
+                var dto = await GetDtoById(user, db);
                 
                 var addressDto = user.Address.ToDto();
                 addressDto.Id = dto.AddressId;
                 await db.UpdateAsync(addressDto);
 
-                var userDto = user.ToDto(addressDto.Id);
+                var userDto = user.ToDto(dto.AddressId);
                 await db.UpdateAsync(userDto);
             }
         }
@@ -82,18 +97,23 @@ JOIN rel.address a
         {
             using (var db = this.Open())
             {
-                var dto = (await db.FindAsync<UserDto>(
-                               statementOptions => statementOptions.Where($"id = :id")
-                                                                   .WithParameters(new {id = user.Id})))
-                   .FirstOrDefault();
+                var dto = await GetDtoById(user, db);
+
+                var userDto = user.ToDto(dto.AddressId);
+                await db.DeleteAsync(userDto);
                 
                 var addressDto = user.Address.ToDto();
                 addressDto.Id = dto.AddressId;
                 await db.DeleteAsync(addressDto);
-
-                var userDto = user.ToDto(addressDto.Id);
-                await db.DeleteAsync(userDto);
             }
+        }
+
+        private static async Task<UserDto> GetDtoById(User user, IDbConnection db)
+        {
+            var dto = await db.FindAsync<UserDto>(
+                          statementOptions => statementOptions.Where($"id = :id")
+                                                              .WithParameters(new {id = user.Id}));
+            return dto.FirstOrDefault();
         }
     }
 
