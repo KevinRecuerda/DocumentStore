@@ -10,7 +10,8 @@
             return DocumentStore.For(
                 options =>
                 {
-                    options.Logger(new ConsoleMartenLogger());
+                    // For debug only
+                    //options.Logger(new ConsoleMartenLogger());
                     options.Connection(connectionStrings.ConnectionString);
                     options.AutoCreateSchemaObjects = AutoCreate.All;
 

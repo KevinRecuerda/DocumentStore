@@ -20,15 +20,17 @@ JOIN rel.addresses a
 
         public UserDataAccess(IConnectionStrings connectionStrings) : base(connectionStrings)
         {
-            OrmConfiguration.GetDefaultEntityMapping<AddressDto>()
-                            .SetSchemaName("rel")
-                            .SetTableName("addresses")
-                            .SetProperty(address => address.Id, prop => prop.SetPrimaryKey().SetDatabaseGenerated(DatabaseGeneratedOption.Identity));
+            var addressMap = OrmConfiguration.GetDefaultEntityMapping<AddressDto>();
+            if (!addressMap.IsFrozen)
+                addressMap.SetSchemaName("rel")
+                          .SetTableName("addresses")
+                          .SetProperty(address => address.Id, prop => prop.SetPrimaryKey().SetDatabaseGenerated(DatabaseGeneratedOption.Identity));
 
-            OrmConfiguration.GetDefaultEntityMapping<UserDto>()
-                            .SetSchemaName("rel")
-                            .SetTableName("users")
-                            .SetProperty(user => user.Id, prop => prop.SetPrimaryKey().SetDatabaseGenerated(DatabaseGeneratedOption.Identity));
+            var userMap = OrmConfiguration.GetDefaultEntityMapping<UserDto>();
+            if (!userMap.IsFrozen)
+                userMap.SetSchemaName("rel")
+                       .SetTableName("users")
+                       .SetProperty(user => user.Id, prop => prop.SetPrimaryKey().SetDatabaseGenerated(DatabaseGeneratedOption.Identity));
         }
 
         public async Task<IEnumerable<User>> GetAll()
@@ -83,7 +85,7 @@ WHERE u.id = :id";
             using (var db = this.Open())
             {
                 var dto = await GetDtoById(user, db);
-                
+
                 var addressDto = user.Address.ToDto();
                 addressDto.Id = dto.AddressId;
                 await db.UpdateAsync(addressDto);
@@ -101,7 +103,7 @@ WHERE u.id = :id";
 
                 var userDto = user.ToDto(dto.AddressId);
                 await db.DeleteAsync(userDto);
-                
+
                 var addressDto = user.Address.ToDto();
                 addressDto.Id = dto.AddressId;
                 await db.DeleteAsync(addressDto);
@@ -131,7 +133,7 @@ WHERE u.id = :id";
 
     public class AddressDto
     {
-        public long Id { get; set; }
+        public long   Id      { get; set; }
         public string Country { get; set; }
         public string City    { get; set; }
         public string Street  { get; set; }
