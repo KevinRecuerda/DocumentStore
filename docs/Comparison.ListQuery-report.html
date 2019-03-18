@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Comparison.ListQuery</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.11.4, OS=Windows 10.0.16299.967 (1709/FallCreatorsUpdate/Redstone3)
+Intel Core i7-6820HQ CPU 2.70GHz (Skylake), 1 CPU, 8 logical and 4 physical cores
+Frequency=2648437 Hz, Resolution=377.5812 ns, Timer=TSC
+.NET Core SDK=2.1.502
+  [Host]              : .NET Core 2.1.6 (CoreCLR 4.6.27019.06, CoreFX 4.6.27019.05), 64bit RyuJIT  [AttachedDebugger]
+  list-property_query : .NET Core 2.1.6 (CoreCLR 4.6.27019.06, CoreFX 4.6.27019.05), 64bit RyuJIT
+</code></pre>
+<pre><code>Job=list-property_query  IterationCount=10  LaunchCount=2  
+RunStrategy=ColdStart  WarmupCount=1  
+</code></pre>
+
+<table>
+<thead><tr><th>Method</th><th>N</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Gen 0/1k Op</th><th>Gen 1/1k Op</th><th>Gen 2/1k Op</th><th>Allocated Memory/Op</th>
+</tr>
+</thead><tbody><tr><td>Document</td><td>1</td><td>22.42 ms</td><td>46.740 ms</td><td>53.83 ms</td><td>5.466 ms</td><td>-</td><td>-</td><td>-</td><td>43.88 KB</td>
+</tr><tr><td>Relational</td><td>1</td><td>16.76 ms</td><td>9.904 ms</td><td>11.41 ms</td><td>12.685 ms</td><td>-</td><td>-</td><td>-</td><td>5.88 KB</td>
+</tr><tr><td>Document</td><td>10</td><td>27.27 ms</td><td>57.446 ms</td><td>66.15 ms</td><td>5.847 ms</td><td>-</td><td>-</td><td>-</td><td>43.88 KB</td>
+</tr><tr><td>Relational</td><td>10</td><td>16.79 ms</td><td>10.715 ms</td><td>12.34 ms</td><td>13.088 ms</td><td>-</td><td>-</td><td>-</td><td>5.88 KB</td>
+</tr></tbody></table>
+</body>
+</html>
