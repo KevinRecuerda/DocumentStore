@@ -68,6 +68,7 @@ namespace RelationalStore.Tests
             actual.ShouldDeepEqual(expected);
 
         }
+
         private async Task AssertInsert(User user)
         {
             await this.userDataAccess.Insert(user);

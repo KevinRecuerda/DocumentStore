@@ -139,7 +139,7 @@ WHERE u.id = :id";
         public string Street  { get; set; }
     }
 
-    public static class DtoExtensions
+    public static class UserDtoExtensions
     {
         public static UserDto ToDto(this User user, long addressId)
         {
