@@ -9,9 +9,9 @@
     using Model.Tests;
 
     [MemoryDiagnoser]
-    [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 3, id: "class-property_insert-delete")]
+    [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 3, id: "user-CRUD")]
     [RPlotExporter]
-    public class ClassInsertDelete
+    public class UserCRUD
     {
         [Params(1, 10, 100, 1000)]
         public int N { get; set; }

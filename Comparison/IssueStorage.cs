@@ -9,16 +9,19 @@
     using Model;
     using Model.Tests;
 
-    [MemoryDiagnoser]
-    [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 10, id: "list-property_query")]
-    [RPlotExporter, PlainExporter]
-    public class ListQuery
+    [SimpleJob(RunStrategy.Monitoring, launchCount: 1, warmupCount: 0, targetCount: 1, id: "issue-storage")]
+    [RPlotExporter]
+    public class IssueStorage
     {
         private DocumentStore.IssueDataAccess   doc;
         private RelationalStore.IssueDataAccess rel;
 
-        [Params(1, 10, 100, 1000)]
+        //[Params(1, 10, 100, 1000)]
+        [Params(1)]
         public int N { get; set; }
+
+        [Params("--")]
+        public string Size { get; set; }
 
         private static readonly Random Random = new Random();
 
@@ -72,13 +75,23 @@
         [Benchmark(Description = "Document")]
         public async Task Document()
         {
-            await this.doc.GetByTags(this.TagsToRequest);
+            this.Size = await GetTableSize("docs", "mt_doc_issue");
+
+            var current = System.IO.Directory.GetCurrentDirectory();
+            System.IO.File.WriteAllText($"Document_{this.N}", this.Size);
         }
 
         [Benchmark(Description = "Relational")]
         public async Task Relational()
         {
-            await this.rel.GetByTags(this.TagsToRequest);
+            this.Size = await GetTableSize("rel", "issues");
+        }
+
+        private async Task<string> GetTableSize(string schema, string table)
+        {
+            var storageDataAccess = new StorageDataAccess(new ConnectionStrings());
+            var size = await storageDataAccess.GetTableSize(schema, table);
+            return size;
         }
     }
 }

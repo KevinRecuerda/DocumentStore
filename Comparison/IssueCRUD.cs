@@ -10,9 +10,9 @@
     using Model.Tests;
 
     [MemoryDiagnoser]
-    [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 3, id: "list-property_insert-delete")]
+    [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 3, id: "issue-CRUD")]
     [RPlotExporter]
-    public class ListInsertDelete
+    public class IssueCRUD
     {
         [Params(1, 10, 100, 1000)]
         public int N { get; set; }
