@@ -10,15 +10,14 @@
     using Model.Tests;
 
     [MemoryDiagnoser]
-    [SimpleJob(RunStrategy.ColdStart, launchCount: 2, warmupCount: 1, targetCount: 10, id: "list-property_query")]
-    [RPlotExporter]
+    [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 10, id: "list-property_query")]
+    [RPlotExporter, PlainExporter]
     public class ListQuery
     {
         private DocumentStore.IssueDataAccess   doc;
         private RelationalStore.IssueDataAccess rel;
 
-        //[Params(1, 10, 100, 1000)]
-        [Params(1, 10)]
+        [Params(1, 10, 100, 1000)]
         public int N { get; set; }
 
         private static readonly Random Random = new Random();

@@ -10,12 +10,11 @@
     using Model.Tests;
 
     [MemoryDiagnoser]
-    [SimpleJob(RunStrategy.ColdStart, launchCount: 2, warmupCount: 1, targetCount: 3, id: "list-property_insert-delete")]
+    [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 3, id: "list-property_insert-delete")]
     [RPlotExporter]
     public class ListInsertDelete
     {
-        //[Params(1, 10, 100, 1000)]
-        [Params(1, 10)]
+        [Params(1, 10, 100, 1000)]
         public int N { get; set; }
 
         private static readonly Random Random = new Random();
