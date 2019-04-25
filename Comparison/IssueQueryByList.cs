@@ -11,13 +11,12 @@
 
     [MemoryDiagnoser]
     [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 10, id: "issue-query-by-list")]
-    [RPlotExporter, PlainExporter]
     public class IssueQueryByList
     {
         private DocumentStore.IssueDataAccess   doc;
         private RelationalStore.IssueDataAccess rel;
 
-        [Params(1, 10, 100, 1000)]
+        [Params(1, 10, 100)]
         public int N { get; set; }
 
         private static readonly Random Random = new Random();

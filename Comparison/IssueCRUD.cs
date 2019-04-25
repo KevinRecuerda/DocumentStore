@@ -11,10 +11,9 @@
 
     [MemoryDiagnoser]
     [SimpleJob(RunStrategy.Monitoring, launchCount: 2, warmupCount: 1, targetCount: 3, id: "issue-CRUD")]
-    [RPlotExporter]
     public class IssueCRUD
     {
-        [Params(1, 10, 100, 1000)]
+        [Params(1, 10, 100)]
         public int N { get; set; }
 
         private static readonly Random Random = new Random();

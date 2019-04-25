@@ -17,3 +17,13 @@ This project is a sample for document store database, using:
 - [Query](http://jasperfx.github.io/marten/documentation/documents/querying/linq/)
 - [Include](http://jasperfx.github.io/marten/documentation/documents/querying/include/)
 - [Inheritance](http://jasperfx.github.io/marten/documentation/documents/advanced/hierarchies/)
+
+
+#### Migrations
+[Marten migration](http://jasperfx.github.io/marten/documentation/schema/migrations/)
+
+```sql
+update example
+set js = js - 'nme' || jsonb_build_object('name', js->'nme')
+where js ? 'nme'
+```

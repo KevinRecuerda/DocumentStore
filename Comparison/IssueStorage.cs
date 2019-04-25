@@ -4,17 +4,44 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Baseline.Reflection;
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Engines;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Model;
     using Model.Tests;
 
-    [SimpleJob(RunStrategy.Monitoring, launchCount: 1, warmupCount: 0, targetCount: 1, id: "issue-storage")]
-    [RPlotExporter]
+    //[SimpleJob(RunStrategy.Monitoring, launchCount: 1, warmupCount: 0, targetCount: 1, id: "issue-storage")]
     public class IssueStorage
     {
         private DocumentStore.IssueDataAccess   doc;
         private RelationalStore.IssueDataAccess rel;
+
+        public static string[,] Sizes;
+        public static Dictionary<int, int> ParamToRowIndex;
+
+        //static IssueStorage()
+        //{
+        //    var parameters = typeof(IssueStorage).GetProperty(nameof(N))
+        //                                         .GetAttribute<ParamsAttribute>()
+        //                                         .Values
+        //                                         .Cast<int>()
+        //                                         .OrderBy(i => i)
+        //                                         .ToArray();
+
+        //    ParamToRowIndex = new Dictionary<int, int>();
+
+        //    Sizes = new string[parameters.Length + 1, 3];
+        //    Sizes[0, 0] = "";
+        //    Sizes[0, 1] = "Document";
+        //    Sizes[0, 2] = "Relational";
+
+        //    for (var i = 0; i < parameters.Length; i++)
+        //    {
+        //        Sizes[i + 1, 0] = parameters[i].ToString();
+        //        ParamToRowIndex[]
+        //    }
+        //}
 
         //[Params(1, 10, 100, 1000)]
         [Params(1)]
@@ -78,6 +105,7 @@
             this.Size = await GetTableSize("docs", "mt_doc_issue");
 
             var current = System.IO.Directory.GetCurrentDirectory();
+            Console.WriteLine(current);
             System.IO.File.WriteAllText($"Document_{this.N}", this.Size);
         }
 
@@ -87,7 +115,7 @@
             this.Size = await GetTableSize("rel", "issues");
         }
 
-        private async Task<string> GetTableSize(string schema, string table)
+        private static async Task<string> GetTableSize(string schema, string table)
         {
             var storageDataAccess = new StorageDataAccess(new ConnectionStrings());
             var size = await storageDataAccess.GetTableSize(schema, table);

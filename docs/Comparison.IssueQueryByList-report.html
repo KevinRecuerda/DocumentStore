@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Comparison.IssueQueryByList</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.11.4, OS=Windows 10.0.16299.1004 (1709/FallCreatorsUpdate/Redstone3)
+Intel Core i7-6820HQ CPU 2.70GHz (Skylake), 1 CPU, 8 logical and 4 physical cores
+Frequency=2648438 Hz, Resolution=377.5810 ns, Timer=TSC
+.NET Core SDK=2.1.502
+  [Host]              : .NET Core 2.1.6 (CoreCLR 4.6.27019.06, CoreFX 4.6.27019.05), 64bit RyuJIT  [AttachedDebugger]
+  issue-query-by-list : .NET Core 2.1.6 (CoreCLR 4.6.27019.06, CoreFX 4.6.27019.05), 64bit RyuJIT
+</code></pre>
+<pre><code>Job=issue-query-by-list  IterationCount=10  LaunchCount=2  
+RunStrategy=Monitoring  WarmupCount=1  
+</code></pre>
+
+<table>
+<thead><tr><th>Method</th><th>N</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Gen 0/1k Op</th><th>Gen 1/1k Op</th><th>Gen 2/1k Op</th><th>Allocated Memory/Op</th>
+</tr>
+</thead><tbody><tr><td>Document</td><td>1</td><td>5.177 ms</td><td>0.7982 ms</td><td>0.9192 ms</td><td>5.034 ms</td><td>-</td><td>-</td><td>-</td><td>43.88 KB</td>
+</tr><tr><td>Relational</td><td>1</td><td>22.148 ms</td><td>14.0008 ms</td><td>16.1233 ms</td><td>12.479 ms</td><td>-</td><td>-</td><td>-</td><td>5.88 KB</td>
+</tr><tr><td>Document</td><td>10</td><td>5.084 ms</td><td>0.4328 ms</td><td>0.4984 ms</td><td>4.960 ms</td><td>-</td><td>-</td><td>-</td><td>43.88 KB</td>
+</tr><tr><td>Relational</td><td>10</td><td>13.704 ms</td><td>6.4159 ms</td><td>7.3886 ms</td><td>11.489 ms</td><td>-</td><td>-</td><td>-</td><td>5.88 KB</td>
+</tr><tr><td>Document</td><td>100</td><td>7.698 ms</td><td>1.1370 ms</td><td>1.3093 ms</td><td>7.950 ms</td><td>-</td><td>-</td><td>-</td><td>43.88 KB</td>
+</tr><tr><td>Relational</td><td>100</td><td>14.271 ms</td><td>4.2782 ms</td><td>4.9268 ms</td><td>12.523 ms</td><td>-</td><td>-</td><td>-</td><td>5.88 KB</td>
+</tr></tbody></table>
+</body>
+</html>
