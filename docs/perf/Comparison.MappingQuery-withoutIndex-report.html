@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Comparison.MappingQuery</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.11.4, OS=Windows 10.0.16299.1268 (1709/FallCreatorsUpdate/Redstone3)
+Intel Core i7-6820HQ CPU 2.70GHz (Skylake), 1 CPU, 8 logical and 4 physical cores
+Frequency=2648434 Hz, Resolution=377.5816 ns, Timer=TSC
+.NET Core SDK=2.2.300
+  [Host]        : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT  [AttachedDebugger]
+  mapping-Query : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT
+</code></pre>
+<pre><code>Job=mapping-Query  IterationCount=3  LaunchCount=2  
+RunStrategy=Monitoring  WarmupCount=1  
+</code></pre>
+
+<table>
+<thead><tr><th>Method</th><th>N</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0/1k Op</th><th>Gen 1/1k Op</th><th>Gen 2/1k Op</th><th>Allocated Memory/Op</th>
+</tr>
+</thead><tbody><tr><td>Simple</td><td>10</td><td>9.905 ms</td><td>3.591 ms</td><td>1.2806 ms</td><td>-</td><td>-</td><td>-</td><td>27.04 KB</td>
+</tr><tr><td>Complex</td><td>10</td><td>8.935 ms</td><td>2.310 ms</td><td>0.8236 ms</td><td>-</td><td>-</td><td>-</td><td>28.39 KB</td>
+</tr><tr><td>Simple</td><td>1000</td><td>9.293 ms</td><td>4.330 ms</td><td>1.5440 ms</td><td>-</td><td>-</td><td>-</td><td>27.04 KB</td>
+</tr><tr><td>Complex</td><td>1000</td><td>11.200 ms</td><td>7.792 ms</td><td>2.7788 ms</td><td>-</td><td>-</td><td>-</td><td>28.74 KB</td>
+</tr><tr><td>Simple</td><td>100000</td><td>9.817 ms</td><td>2.537 ms</td><td>0.9046 ms</td><td>-</td><td>-</td><td>-</td><td>27.38 KB</td>
+</tr><tr><td>Complex</td><td>100000</td><td>54.241 ms</td><td>35.298 ms</td><td>12.5877 ms</td><td>-</td><td>-</td><td>-</td><td>28.7 KB</td>
+</tr></tbody></table>
+</body>
+</html>

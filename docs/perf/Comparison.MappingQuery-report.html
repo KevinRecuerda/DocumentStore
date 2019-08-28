@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Comparison.MappingQueryArray</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.11.4, OS=Windows 10.0.16299.1268 (1709/FallCreatorsUpdate/Redstone3)
+Intel Core i7-6820HQ CPU 2.70GHz (Skylake), 1 CPU, 8 logical and 4 physical cores
+Frequency=2648434 Hz, Resolution=377.5816 ns, Timer=TSC
+.NET Core SDK=2.2.300
+  [Host]        : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT  [AttachedDebugger]
+  mapping-query : .NET Core 2.1.11 (CoreCLR 4.6.27617.04, CoreFX 4.6.27617.02), 64bit RyuJIT
+</code></pre>
+<pre><code>Job=mapping-query  IterationCount=3  LaunchCount=2  
+RunStrategy=Monitoring  WarmupCount=1  
+</code></pre>
+
+<table>
+<thead><tr><th>   Method</th><th>N</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Gen 0/1k Op</th><th>Gen 1/1k Op</th><th>Gen 2/1k Op</th><th>Allocated Memory/Op</th>
+</tr>
+</thead><tbody><tr><td>Simple</td><td>10</td><td>433.5 ms</td><td>40.54 ms</td><td>14.458 ms</td><td>-</td><td>-</td><td>-</td><td>26.23 KB</td>
+</tr><tr><td>ComplexOne</td><td>10</td><td>439.0 ms</td><td>36.50 ms</td><td>13.017 ms</td><td>-</td><td>-</td><td>-</td><td>27.23 KB</td>
+</tr><tr><td>ComplexMultiple</td><td>10</td><td>440.6 ms</td><td>18.81 ms</td><td>6.708 ms</td><td>-</td><td>-</td><td>-</td><td>28.29 KB</td>
+</tr><tr><td>Simple</td><td>1000</td><td>457.8 ms</td><td>90.98 ms</td><td>32.446 ms</td><td>-</td><td>-</td><td>-</td><td>26.23 KB</td>
+</tr><tr><td>ComplexOne</td><td>1000</td><td>417.6 ms</td><td>94.30 ms</td><td>33.629 ms</td><td>-</td><td>-</td><td>-</td><td>27.59 KB</td>
+</tr><tr><td>ComplexMultiple</td><td>1000</td><td>432.2 ms</td><td>155.98 ms</td><td>55.625 ms</td><td>-</td><td>-</td><td>-</td><td>28.46 KB</td>
+</tr><tr><td>Simple</td><td>100000</td><td>453.6 ms</td><td>84.11 ms</td><td>29.994 ms</td><td>-</td><td>-</td><td>-</td><td>26.4 KB</td>
+</tr><tr><td>ComplexOne</td><td>100000</td><td>1,945.9 ms</td><td>2,030.13 ms</td><td>723.964 ms</td><td>-</td><td>-</td><td>-</td><td>29.09 KB</td>
+</tr><tr><td>ComplexMultiple</td><td>100000</td><td>925.8 ms</td><td>93.83 ms</td><td>33.459 ms</td><td>-</td><td>-</td><td>-</td><td>28.46 KB</td>
+</tr></tbody></table>
+</body>
+</html>

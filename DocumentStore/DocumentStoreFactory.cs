@@ -1,6 +1,8 @@
 ﻿namespace DocumentStore
 {
+    using DocumentStore.Extensions;
     using Marten;
+    using Marten.Schema;
     using Model;
 
     public static class DocumentStoreFactory
@@ -14,6 +16,8 @@
                     //options.Logger(new ConsoleMartenLogger());
                     options.Connection(connectionStrings.ConnectionString);
                     options.AutoCreateSchemaObjects = AutoCreate.All;
+
+                    options.Linq.MethodCallParsers.Add(new ContainsAny());
 
                     options.DatabaseSchemaName = "docs";
 
@@ -32,6 +36,19 @@
                                 typeof(Smurfette),
                                 typeof(HeftySmurf),
                                 typeof(BrainySmurf));
+
+                    options.Schema
+                           .For<MappingSimple>()
+                           .Identity(m => m.FrenchId)
+                           .Index(m => m.FrenchId);
+
+                    options.Schema
+                           .For<MappingComplex>()
+                           .Identity(m => m.WorldId)
+                           .GinIndexJsonData()
+                           .Index(m => m.FrenchIds, index => index.Method = IndexMethod.gin);
+
+                    //options.GinIndex<MappingComplex>("french_ids", "data->'FrenchIds'");
                 });
         }
     }
