@@ -1,4 +1,4 @@
-﻿namespace Comparison
+﻿namespace Comparison.DocRel
 {
     using System.Linq;
     using System.Threading.Tasks;

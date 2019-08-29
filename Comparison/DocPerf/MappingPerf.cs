@@ -1,4 +1,4 @@
-﻿namespace Comparison
+﻿namespace Comparison.DocPerf
 {
     using System;
     using System.Linq;
@@ -13,11 +13,6 @@
     public class MappingData
     {
         private static readonly Random Random = new Random();
-
-        public MappingSimple[]  SimpleMappings  { get; set; }
-        public MappingComplex[] ComplexMappings { get; set; }
-
-        public string[] IdToSearch { get; set; }
 
         public MappingData(int n)
         {
@@ -48,6 +43,11 @@
                 FirstNearMiddle(this.ComplexMappings, m => m.FrenchIds.Count == 3).FrenchIds.Last()
             };
         }
+
+        public MappingSimple[]  SimpleMappings  { get; set; }
+        public MappingComplex[] ComplexMappings { get; set; }
+
+        public string[] IdToSearch { get; set; }
 
         private static T FirstNearMiddle<T>(T[] array, Func<T, bool> filter)
         {

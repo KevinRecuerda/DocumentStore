@@ -18,4 +18,10 @@
     <ProjectReference Include="..\RelationalStore\RelationalStore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DocPerf\sample.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

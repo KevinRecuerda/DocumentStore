@@ -1,5 +1,6 @@
 ﻿namespace DocumentStore
 {
+    using System;
     using DocumentStore.Extensions;
     using Marten;
     using Marten.Schema;
@@ -7,7 +8,7 @@
 
     public static class DocumentStoreFactory
     {
-        public static IDocumentStore CreateDocumentStore(IConnectionStrings connectionStrings)
+        public static IDocumentStore CreateDocumentStore(IConnectionStrings connectionStrings, Action<StoreOptions> configure = null)
         {
             return DocumentStore.For(
                 options =>
@@ -18,6 +19,7 @@
                     options.AutoCreateSchemaObjects = AutoCreate.All;
 
                     options.Linq.MethodCallParsers.Add(new ContainsAny());
+                    options.Linq.MethodCallParsers.Add(new SearchRegular());
 
                     options.DatabaseSchemaName = "docs";
 
@@ -49,6 +51,16 @@
                            .Index(m => m.FrenchIds, index => index.Method = IndexMethod.gin);
 
                     //options.GinIndex<MappingComplex>("french_ids", "data->'FrenchIds'");
+
+                    // TODO: use gin_trgm_ops
+                    //options.Schema
+                    //       .For<TextSearch>()
+                    //       .Index(x => x.Text, index =>
+                    //        {
+                    //            index.Method = IndexMethod.gin;
+                    //        });
+
+                    configure?.Invoke(options);
                 });
         }
     }

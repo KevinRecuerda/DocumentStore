@@ -1,13 +1,10 @@
-﻿namespace Comparison
+﻿namespace Comparison.DocRel
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Baseline.Reflection;
     using BenchmarkDotNet.Attributes;
-    using BenchmarkDotNet.Engines;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Model;
     using Model.Tests;
 

@@ -1,4 +1,4 @@
-﻿namespace Comparison
+﻿namespace Comparison.DocRel
 {
     using System;
     using System.Collections.Generic;

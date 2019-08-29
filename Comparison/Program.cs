@@ -4,6 +4,7 @@
     using System.Reflection;
     using BenchmarkDotNet.Configs;
     using BenchmarkDotNet.Running;
+    using Comparison.DocPerf;
 
     public class Program
     {
@@ -17,7 +18,8 @@
             //BenchmarkRunner.Run<IssueCRUD>();
             //BenchmarkRunner.Run<IssueQueryByList>();
             //BenchmarkRunner.Run<MappingBulkInsert>();
-            BenchmarkRunner.Run<MappingQuery>();
+            //BenchmarkRunner.Run<MappingQuery>();
+            BenchmarkRunner.Run<TextSearchPerf>();
 
             //var summary = BenchmarkRunner.Run<IssueStorage>(new DebugBuildConfig());
             //Console.ReadLine();

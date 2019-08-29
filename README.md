@@ -4,6 +4,13 @@ This project is a sample for document store database, using:
 - Postgresql
 - [Marten](https://github.com/JasperFx/marten)
 
+it shows:
+- Sub class (`Issue`)
+- Sub array (`Assignee`)
+- Inheritance (`Smurf`)
+- Indexing sub array (`Mapping`)
+- Indexing text (`TextSearch`)
+
 ***
 
 #### Postgresql
@@ -11,7 +18,7 @@ This project is a sample for document store database, using:
 - [Index types](https://www.citusdata.com/blog/2017/10/17/tour-of-postgres-index-types/)
   - [gin index](https://www.postgresql.org/docs/9.4/datatype-json.html#JSON-INDEXING)
   - [full text search index](https://www.postgresql.org/docs/9.5/textsearch-tables.html#TEXTSEARCH-TABLES-INDEX)
-  - [regex index](https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP)
+  - [regex index](https://www.postgresql.org/docs/9.4/pgtrgm.html#AEN163078) ([functions](https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP))
 - [Index usage](https://medium.com/@Alibaba_Cloud/principles-and-optimization-of-5-postgresql-indexes-btree-hash-gin-gist-and-brin-4d133e7f1842)
 
 
