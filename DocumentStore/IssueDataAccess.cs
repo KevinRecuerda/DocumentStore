@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using DocumentStore.Extensions;
     using Marten;
     using Marten.Linq.MatchesSql;
     using Marten.Services.Includes;

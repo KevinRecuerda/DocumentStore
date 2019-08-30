@@ -1,4 +1,4 @@
-﻿namespace DocumentStore
+﻿namespace DocumentStore.Extensions
 {
     using System;
     using System.Linq;

@@ -11,15 +11,19 @@ it shows:
 - Indexing sub array (`Mapping`)
 - Indexing text (`TextSearch`)
 
+
 ***
+
 
 #### Postgresql
 - [Jsonb functions](https://www.postgresql.org/docs/9.5/functions-json.html)
 - [Index types](https://www.citusdata.com/blog/2017/10/17/tour-of-postgres-index-types/)
   - [gin index](https://www.postgresql.org/docs/9.4/datatype-json.html#JSON-INDEXING)
   - [full text search index](https://www.postgresql.org/docs/9.5/textsearch-tables.html#TEXTSEARCH-TABLES-INDEX)
-  - [regex index](https://www.postgresql.org/docs/9.4/pgtrgm.html#AEN163078) ([functions](https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP))
-- [Index usage](https://medium.com/@Alibaba_Cloud/principles-and-optimization-of-5-postgresql-indexes-btree-hash-gin-gist-and-brin-4d133e7f1842)
+  - [similar text index](https://www.postgresql.org/docs/9.4/pgtrgm.html#AEN163078) ([functions](https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP))
+- [index usage](https://medium.com/@Alibaba_Cloud/principles-and-optimization-of-5-postgresql-indexes-btree-hash-gin-gist-and-brin-4d133e7f1842)
+
+> need `pg_trgm` extension
 
 
 #### Marten
@@ -46,6 +50,7 @@ set js = jsonb_set(
             js #> '{prefixPath,old,0}') -- take only first item
 where js ? '{prefixPath,old}'
 ```
+
 
 #### Note
 - [`Include` with JoinType.LeftOuter and dictionary fails](https://github.com/JasperFx/marten/pull/1223)

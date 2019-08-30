@@ -1,15 +1,25 @@
 ﻿namespace DocumentStore.Extensions
 {
     using Marten;
-    using Model;
+    using Marten.Schema;
 
     public static class MartenRegistryExtension
     {
-        public static StoreOptions GinIndex<T>(this StoreOptions options, string shortName, string column)
+        public static StoreOptions GinIndex<T>(this StoreOptions options, string shortName, string column, string op = "")
         {
-            var doc      = options.Storage.MappingFor(typeof(MappingComplex));
-            var ginIndex = new GinIndex(doc, shortName, column);
-            doc.Indexes.Add(ginIndex);
+            return options.Index<T>(shortName, column, IndexMethod.gin, op);
+        }
+
+        public static StoreOptions GistIndex<T>(this StoreOptions options, string shortName, string column, string op = "")
+        {
+            return options.Index<T>(shortName, column, IndexMethod.gist, op);
+        }
+
+        public static StoreOptions Index<T>(this StoreOptions options, string shortName, string column, IndexMethod method, string op = "")
+        {
+            var doc   = options.Storage.MappingFor(typeof(T));
+            var index = new SimpleIndex(doc, shortName, column, method, op);;
+            doc.Indexes.Add(index);
             return options;
         }
     }

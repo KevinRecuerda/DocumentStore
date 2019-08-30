@@ -19,7 +19,7 @@
             //BenchmarkRunner.Run<IssueQueryByList>();
             //BenchmarkRunner.Run<MappingBulkInsert>();
             //BenchmarkRunner.Run<MappingQuery>();
-            BenchmarkRunner.Run<TextSearchPerf>();
+            BenchmarkRunner.Run<SearchSimilarPerf>();
 
             //var summary = BenchmarkRunner.Run<IssueStorage>(new DebugBuildConfig());
             //Console.ReadLine();

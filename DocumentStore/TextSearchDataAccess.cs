@@ -33,11 +33,11 @@
             }
         }
 
-        public async Task<IReadOnlyList<TextSearch>> SearchByText(string search)
+        public async Task<IReadOnlyList<TextSearch>> SearchByText(string search, int top = 10)
         {
             using (var session = this.store.OpenSession())
             {
-                var textSearches = await session.SearchRegularAsync<TextSearch>(x => x.Text, search);
+                var textSearches = await session.SearchSimilarAsync<TextSearch>(x => x.Text, search, top);
                 return textSearches;
             }
         }

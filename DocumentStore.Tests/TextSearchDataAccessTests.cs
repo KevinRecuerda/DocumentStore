@@ -2,6 +2,7 @@ namespace DocumentStore.Tests
 {
     using System.Threading.Tasks;
     using DeepEqual.Syntax;
+    using FluentAssertions;
     using Model;
     using Model.Tests;
     using Xunit;
@@ -12,7 +13,10 @@ namespace DocumentStore.Tests
 
         public TextSearchDataAccessTests()
         {
-            this.dataAccess = new TextSearchDataAccess(DocumentStoreFactory.CreateDocumentStore(new ConnectionStrings()));
+            var store = DocumentStoreFactory.CreateDocumentStore(new ConnectionStrings());
+            this.dataAccess = new TextSearchDataAccess(store);
+
+            store.Advanced.Clean.DeleteDocumentsFor(typeof(TextSearch));
         }
 
         public static TextSearch CreateTextSearch(string text)
@@ -43,8 +47,8 @@ namespace DocumentStore.Tests
             await this.AssertSearchByText("occ", text1, text2);
             await this.AssertSearchByText("rong", text3, text4);
             await this.AssertSearchByText("WrONg", text3, text4);
-            await this.AssertSearchByText("thi o", text1, text2, text3, text4);
-            await this.AssertSearchByText("is", text3, text4, text2);
+            await this.AssertSearchByText("thi o", text4);
+            await this.AssertSearchByText("is", text3, text4);
 
             // Delete
             await this.AssertDelete(text1);
@@ -65,10 +69,10 @@ namespace DocumentStore.Tests
             actual.ShouldDeepEqual(expected);
         }
 
-        private async Task AssertSearchByText(string search, params TextSearch[] expected)
+        private async Task AssertSearchByText(string search, params TextSearch[] firstExpected)
         {
             var actual = await this.dataAccess.SearchByText(search);
-            actual.ShouldDeepEqual(expected);
+            firstExpected.Should().ContainEquivalentOf(actual[0]);
         }
 
         private async Task AssertSave(TextSearch text)
@@ -77,7 +81,7 @@ namespace DocumentStore.Tests
             await this.AssertGet(text.Id, text);
         }
 
-        public async Task AssertDelete(TextSearch text)
+        private async Task AssertDelete(TextSearch text)
         {
             await this.dataAccess.Delete(text);
             await this.AssertGet(text.Id, null);
