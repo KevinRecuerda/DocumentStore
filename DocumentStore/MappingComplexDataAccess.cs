@@ -56,6 +56,19 @@
             }
         }
 
+        public Task<IReadOnlyList<MappingSimple>> GetByFrenchIdFlatten(string id)
+        {
+            using (var session = this.store.OpenSession())
+            {
+                var mappings = session.Query<MappingComplex>()
+                                      .Where(x => x.FrenchIds.Contains(id))
+                                      .SelectFields<MappingComplex, MappingSimple>(
+                                           session,
+                                           new[] {("WorldId", "d.data -> 'WorldId'"), ("FrenchId", "d.data -> 'FrenchIds' -> 0")});
+                return Task.FromResult(mappings);
+            }
+        }
+
         public void Insert(params MappingComplex[] mappings)
         {
             this.store.BulkInsert(mappings, BulkInsertMode.OverwriteExisting);

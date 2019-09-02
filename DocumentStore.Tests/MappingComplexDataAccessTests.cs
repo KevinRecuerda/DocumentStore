@@ -43,6 +43,7 @@ namespace DocumentStore.Tests
             await this.AssertGetByFrenchId("F2", mapping3);
             await this.AssertGetByFrenchId("F3", mapping3);
             await this.AssertGetByFrenchIds(new[] {"F1", "F2"}, mapping2, mapping3);
+            await this.AssertGetByFrenchIdFlatten("F1", new MappingSimple() {WorldId = "W2", FrenchId = "F1"});
 
             // Delete
             await this.AssertDeleteAll();
@@ -69,6 +70,12 @@ namespace DocumentStore.Tests
         private async Task AssertGetByFrenchIds(string[] frenchIds, params MappingComplex[] expected)
         {
             var actual = await this.mappingDataAccess.GetByFrenchIds(frenchIds);
+            actual.ShouldDeepEqual(expected);
+        }
+
+        private async Task AssertGetByFrenchIdFlatten(string frenchId, params MappingSimple[] expected)
+        {
+            var actual = await this.mappingDataAccess.GetByFrenchIdFlatten(frenchId);
             actual.ShouldDeepEqual(expected);
         }
 

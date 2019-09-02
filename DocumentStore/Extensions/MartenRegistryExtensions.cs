@@ -3,7 +3,7 @@
     using Marten;
     using Marten.Schema;
 
-    public static class MartenRegistryExtension
+    public static class MartenRegistryExtensions
     {
         public static StoreOptions GinIndex<T>(this StoreOptions options, string shortName, string column, string op = "")
         {
