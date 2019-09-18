@@ -1,8 +1,15 @@
 ﻿namespace DocumentStore.Extensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
+    using System.Text.RegularExpressions;
+    using Baseline;
     using Marten;
+    using Marten.Linq;
+    using Marten.Linq.MatchesSql;
+    using Marten.Services.Includes;
     using Marten.Util;
 
     public static class MartenQueryableExtensions
@@ -47,6 +54,26 @@
             }
 
             return results;
+        }
+
+        public static IQueryable<TSource> Where<TSource, TInclude>(
+            this IQueryable<TSource>         source,
+            Expression<Func<TInclude, bool>> predicate,
+            IQuerySession                    session)
+        {
+            var command    = session.Query<TInclude>().Where(predicate).ToCommand();
+            var parameters = command.Parameters.Select(p => p.Value).ToArray();
+
+            var query       = command.CommandText;
+            var whereClause = query.Substring(query.IndexOf("where ") + 5);
+
+            var executor = source.As<MartenQueryable<TSource>>().Executor;
+            var include  = executor.Includes.OfType<IncludeJoin<TInclude>>().First();
+
+            whereClause = whereClause.Replace("d.", include.TableAlias + ".");
+            whereClause = Regex.Replace(whereClause, @":arg(\d+)", "?");
+
+            return source.Where(x => x.MatchesSql(whereClause, parameters));
         }
     }
 }

@@ -1,21 +1,32 @@
 namespace DocumentStore.Tests
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using DeepEqual.Syntax;
+    using FluentAssertions;
+    using Marten;
     using Model;
     using Model.Tests;
     using Xunit;
 
-    public class IssueDataAccessTests
+    public class IssueDataAccessTests : IDisposable
     {
         private readonly IssueDataAccess     issueDataAccess;
         private readonly UserDataAccessTests userTests;
+        private readonly IDocumentStore documentStore;
 
         public IssueDataAccessTests()
         {
-            this.issueDataAccess = new IssueDataAccess(DocumentStoreFactory.CreateDocumentStore(new ConnectionStrings()));
+            this.documentStore = DocumentStoreFactory.CreateDocumentStore(new ConnectionStrings());
+            this.issueDataAccess = new IssueDataAccess(this.documentStore);
             this.userTests       = new UserDataAccessTests();
+        }
+
+        public void Dispose()
+        {
+            this.documentStore.Advanced.Clean.DeleteDocumentsFor(typeof(User));
+            this.documentStore.Advanced.Clean.DeleteDocumentsFor(typeof(Issue));
         }
 
         public static Issue CreateIssue(string name, params string[] tags)
@@ -91,6 +102,11 @@ namespace DocumentStore.Tests
             await this.AssertGetByTagsIncludingAssignee(new[] {"tag3"}, new[] {issue4}, new User[] { });
             await this.AssertGetByTagsIncludingAssignee(new[] {"tag unknown"}, new Issue[] { }, new User[] { });
 
+            // ByFirstName
+            await this.AssertGetByFirstNameIncludingAssignee(user1.FirstName, user1, issue2);
+            await this.AssertGetByFirstNameIncludingAssignee(user2.FirstName, user2, issue3);
+            await this.AssertGetByFirstNameIncludingAssignee("toto", null);
+
             // Delete
             await this.AssertDelete(issue1);
             await this.AssertDelete(issue2);
@@ -104,6 +120,20 @@ namespace DocumentStore.Tests
         {
             var actual = await this.issueDataAccess.GetAll();
             actual.ShouldDeepEqual(expected);
+        }
+
+        private async Task AssertGetById(long id, Issue expected)
+        {
+            var actual = await this.issueDataAccess.GetById(id);
+            actual.ShouldDeepEqual(expected);
+        }
+
+        private async Task AssertGetByIdIncludingAssignee(Issue expectedIssue, User expectedUser)
+        {
+            var (actualIssue, actualUser) = await this.issueDataAccess.GetByIdIncludingAssignee(expectedIssue.Id);
+
+            actualIssue.ShouldDeepEqual(expectedIssue);
+            actualUser.ShouldDeepEqual(expectedUser);
         }
 
         private async Task AssertGetByTags(string[] tags, params Issue[] expected)
@@ -120,18 +150,20 @@ namespace DocumentStore.Tests
             actualUsers.Values.ShouldDeepEqual(expectedUsers);
         }
 
-        private async Task AssertGetById(long id, Issue expected)
+        private async Task AssertGetByFirstNameIncludingAssignee(string firstName, User expectedUser, params Issue[] expectedIssues)
         {
-            var actual = await this.issueDataAccess.GetById(id);
-            actual.ShouldDeepEqual(expected);
-        }
+            var (actualIssues, actualUsers) = await this.issueDataAccess.GetByFirstNameIncludingAssignee(firstName);
 
-        private async Task AssertGetByIdIncludingAssignee(Issue expectedIssue, User expectedUser)
-        {
-            var (actualIssue, actualUser) = await this.issueDataAccess.GetByIdIncludingAssignee(expectedIssue.Id);
-
-            actualIssue.ShouldDeepEqual(expectedIssue);
-            actualUser.ShouldDeepEqual(expectedUser);
+            if (expectedUser == null)
+            {
+                actualIssues.Should().BeEmpty();
+                actualUsers.Should().BeEmpty();
+            }
+            else
+            {
+                actualIssues.ShouldDeepEqual(expectedIssues);
+                actualUsers.Values.Single().ShouldDeepEqual(expectedUser);
+            }
         }
 
         private async Task AssertSave(Issue issue)

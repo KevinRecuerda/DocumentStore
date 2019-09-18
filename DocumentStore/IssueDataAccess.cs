@@ -64,6 +64,21 @@
             }
         }
 
+        public async Task<(IReadOnlyList<Issue>, Dictionary<long, User>)> GetByFirstNameIncludingAssignee(string firstName)
+        {
+            using (var session = this.store.OpenSession())
+            {
+                var users = new Dictionary<long, User>();
+
+                var issues = await session.Query<Issue>()
+                                          .Include(i => i.AssigneeId, users)
+                                          .Where<Issue, User>(u => u.FirstName == firstName, session)
+                                          .ToListAsync();
+
+                return (issues, users);
+            }
+        }
+
         public async Task<Issue> GetById(long id)
         {
             using (var session = this.store.OpenSession())
