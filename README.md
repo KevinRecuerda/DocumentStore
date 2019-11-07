@@ -32,6 +32,12 @@ it shows:
 - [Include](http://jasperfx.github.io/marten/documentation/documents/querying/include/)
 - [Inheritance](http://jasperfx.github.io/marten/documentation/documents/advanced/hierarchies/)
 
+##### Id generation
+- [marten identity](https://jasperfx.github.io/marten/documentation/documents/identity/)
+- [hi-lo algorithm](https://stackoverflow.com/questions/282099/whats-the-hi-lo-algorithm)
+- `int/long` vs `uuid/guid`
+  - [stackoverflow](https://dba.stackexchange.com/questions/264/guid-vs-int-which-is-better-as-a-primary-key)
+  - [usage](https://tomharrisonjr.com/uuid-or-guid-as-primary-keys-be-careful-7b2aa3dcb439) => Integers Internal, UUIDs External
 
 #### Migrations
 [Marten migration](http://jasperfx.github.io/marten/documentation/schema/migrations/)
