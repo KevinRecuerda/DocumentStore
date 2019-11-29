@@ -50,6 +50,7 @@
                            .Index(m => m.FrenchIds, index => index.Method = IndexMethod.gin);
 
                     //options.GinIndex<MappingComplex>("french_ids", "data->'FrenchIds'");
+                    //options.GinIndex<MappingComplex>(x => x.FrenchIds);
 
                     if (useIndex)
                         options.GistIndex<TextSearch>("text", $"data->>'{nameof(TextSearch.Text)}'", "gist_trgm_ops");
