@@ -17,6 +17,7 @@ it shows:
 
 #### Postgresql
 - [Jsonb functions](https://www.postgresql.org/docs/9.5/functions-json.html)
+- [sub-array filter](https://stackoverflow.com/questions/22736742/query-for-array-elements-inside-json-type)
 - [Index types](https://www.citusdata.com/blog/2017/10/17/tour-of-postgres-index-types/)
   - [gin index](https://www.postgresql.org/docs/9.4/datatype-json.html#JSON-INDEXING)
   - [full text search index](https://www.postgresql.org/docs/9.5/textsearch-tables.html#TEXTSEARCH-TABLES-INDEX)
